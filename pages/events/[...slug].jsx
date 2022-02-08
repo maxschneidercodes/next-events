@@ -1,46 +1,54 @@
-import { useRouter } from "next/router"
 import { Fragment } from "react"
 import EventList from "../../components/events/EventList"
-import EventsSearch from "../../components/events/EventsSearch"
-import { getFilteredEvents } from "../../data/dummy-data"
 import ResultsTitle from "../../components/events/results-title"
 import CustomButton from "../../components/ui/button"
 import ErrorAlert from "../../components/ui/error-alert"
+import { getFilteredEvents } from "../../data/EventsData"
 
-export default function FilteredEventsPage() {
-    const router = useRouter()
+export default function FilteredEventsPage(props) {
+    const { events, year, month, hasError } = props
 
-    const filteredData = router.query.slug
-    if (!filteredData) { return <p>Loading...</p> }
-
-    const numY = +filteredData[0]
-    const numM = +filteredData[1]
-
-    if (isNaN(numY) || isNaN(numM)) {
-        return <Fragment>
-            <div className="center">
-                <ErrorAlert>Invalid Search Querry.</ErrorAlert>
-                <CustomButton link="/events">Show All Events</CustomButton>
-            </div>
-        </Fragment>
+    if (hasError) {
+        return <p>Error</p>
     }
 
-    const filterQuerry = { year: numY, month: numM }
-    const filteredEvents = getFilteredEvents(filterQuerry)
-
-    if (!filteredEvents || filteredEvents.length === 0) {
-        return <div className="center">
-            <div className="center">
-                <ErrorAlert>No Events found.</ErrorAlert>
-                <CustomButton link="/events">Show All Events</CustomButton>
-            </div>
-        </div>
-    }
-
-    const date = new Date(numY, numM - 1)
+    const date = new Date(year, month - 1)
 
     return <Fragment>
         <ResultsTitle date={date} />
-        <EventList items={filteredEvents} />
+        <EventList items={events} />
     </Fragment>
+}
+
+
+//SERVER SIDE RENDERING
+export async function getServerSideProps(context) {
+    const { params, req, res } = context
+
+    const filteredData = params.slug
+
+    const filteredYear = filteredData[0]
+    const filteredMonth = filteredData[1]
+
+    const numYear = +filteredYear
+    const numMonth = +filteredMonth
+
+    if (isNaN(numYear) || isNaN(numMonth)) {
+        return {
+            props: { hasError: true }
+        }
+    }
+
+    const filteredEvents = await getFilteredEvents({
+        year: numYear,
+        month: numMonth
+    })
+
+    return {
+        props: {
+            year: numYear,
+            month: numMonth,
+            events: filteredEvents
+        }
+    }
 }
