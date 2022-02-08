@@ -4,7 +4,6 @@ import { useRouter } from "next/router"
 import { getAllEvents } from "../../data/EventsData"
 import EventList from "../../components/events/EventList"
 
-//CLIENT SIDE CODE
 export default function EventsPage(props) {
     const router = useRouter()
     const { events } = props

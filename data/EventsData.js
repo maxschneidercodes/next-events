@@ -1,5 +1,7 @@
+export const eventsDataUrl = "https://events-app-f18fb-default-rtdb.europe-west1.firebasedatabase.app/events.json"
+
 export async function getAllEvents() {
-    const res = await fetch("https://events-app-f18fb-default-rtdb.europe-west1.firebasedatabase.app/events.json")
+    const res = await fetch(eventsDataUrl)
     const events = await res.json()
     return events
 }
