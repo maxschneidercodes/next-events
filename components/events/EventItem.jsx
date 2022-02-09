@@ -1,3 +1,5 @@
+import Image from "next/image"
+
 import classes from "../events/EventItem.module.css"
 import CustomButton from "../ui/button"
 import DateIcon from "../icons/date-icon"
@@ -12,11 +14,17 @@ export default function EventItem(props) {
         month: "long",
         year: "numeric"
     })
-    const exploreLink = `events/${item.id}`
+
+    let exploreLink = ""
+    if (item.isSlug) {
+        exploreLink = `${item.id}`
+    } else {
+        exploreLink = `events/${item.id}`
+    }
 
     return (
         <li className={classes.item}>
-            <img src={'/' + item.image} alt={item.title} />
+            <Image src={'/' + item.image} alt={item.title} width={250} height={150} />
             <div className={classes.content}>
                 <div className={classes.summary}>
                     <h2>{item.title}</h2>

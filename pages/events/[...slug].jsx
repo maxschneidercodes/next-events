@@ -1,10 +1,11 @@
 import { Fragment, useEffect, useState } from "react"
+import { useRouter } from "next/router"
+
 import EventList from "../../components/events/EventList"
 import ResultsTitle from "../../components/events/results-title"
 import CustomButton from "../../components/ui/button"
 import ErrorAlert from "../../components/ui/error-alert"
 import { eventsDataUrl } from "../../data/EventsData"
-import { useRouter } from "next/router"
 
 export default function FilteredEventsPage() {
     const router = useRouter()
@@ -42,12 +43,14 @@ export default function FilteredEventsPage() {
         const eventDate = new Date(event.date);
         return eventDate.getFullYear() === numYear
             && eventDate.getMonth() === numMonth - 1;
-    });
+    }).map(event => {
+        return { ...event, isSlug: true }
+    })
+
 
     if (isNaN(numYear) || isNaN(numMonth) || filteredEvents.length === 0) {
         return <div className="center" style={{ "marginTop": "2rem" }} >
-            <ErrorAlert>No Events found.
-            </ErrorAlert>
+            <ErrorAlert>No Events found.</ErrorAlert>
             <CustomButton link="/events">All Events</CustomButton>
         </ div>
     }

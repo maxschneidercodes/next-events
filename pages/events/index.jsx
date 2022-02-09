@@ -1,6 +1,7 @@
 import { Fragment } from "react"
-import EventsSearch from "../../components/events/EventsSearch"
 import { useRouter } from "next/router"
+
+import EventsSearch from "../../components/events/EventsSearch"
 import { getAllEvents } from "../../data/EventsData"
 import EventList from "../../components/events/EventList"
 
