@@ -1,13 +1,17 @@
 import { Fragment } from "react"
 import Head from "next/head"
 
+import { getEventById, getFeaturedEvents } from "../../data/EventsData"
+
+import { getCommentData, buildCommentPath } from "../api/comment"
+
 import EventSummery from "../../components/events/event-detail/event-summary"
 import EventLogistics from "../../components/events/event-detail/event-logistics"
 import EventConent from "../../components/events/event-detail/event-content"
-import { getEventById, getFeaturedEvents } from "../../data/EventsData"
+import Comments from "../../components/comment/comments"
 
 export default function EventDetailsPage(props) {
-    const { event } = props
+    const { event, comments } = props
 
     return (
         <Fragment>
@@ -20,6 +24,7 @@ export default function EventDetailsPage(props) {
             <EventConent>
                 {event.description}
             </EventConent>
+            <Comments comments={comments} eventId={event.id} />
         </Fragment>
     )
 }
@@ -29,13 +34,17 @@ export async function getStaticProps(context) {
     const eventId = params.eventid
     const event = await getEventById(eventId)
 
+    const path = buildCommentPath()
+    const comments = getCommentData(path)
+
     if (!event) {
         return { notFound: true }
     }
 
     return {
         props: {
-            event: event
+            event: event,
+            comments: comments,
         },
         revalidate: 30
     }

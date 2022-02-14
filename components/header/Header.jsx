@@ -8,7 +8,7 @@ export default function Header() {
             </div>
             <nav className={classes.navigation}>
                 <li>
-                    <Link href="/events"><a className={classes.navigation}>Browse All Events</a></Link>
+                    <Link href="/events"><a className={classes.navigation}>All Events</a></Link>
                 </li>
             </nav>
         </header>
