@@ -3,7 +3,11 @@ import { useRef } from 'react';
 
 import classes from './newsletter-registration.module.css';
 
+import { useContext } from "react"
+import { Context } from '../../store/notification-context';
 function NewsletterRegistration() {
+
+    const { showNotificationHandler } = useContext(Context)
     const emailRef = useRef()
     const [success, setSuccess] = useState(false)
 
@@ -21,7 +25,11 @@ function NewsletterRegistration() {
         }).then(res => res.json())
             .then(data => {
                 if (data.message == "success") {
-                    setSuccess(true)
+                    showNotificationHandler({
+                        title: "Pending...",
+                        message: "Sining up",
+                        stauts: "pending"
+                    })
                 }
             })
     }
