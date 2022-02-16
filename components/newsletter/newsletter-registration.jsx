@@ -16,6 +16,13 @@ function NewsletterRegistration() {
 
         const email = emailRef.current.value
         const newsletterData = { email: email }
+
+        showNotificationHandler({
+            title: "Pending..",
+            message: "Sining up",
+            status: "pending"
+        })
+
         fetch("/api/newsletter", {
             method: "POST",
             body: JSON.stringify(newsletterData),
@@ -24,13 +31,18 @@ function NewsletterRegistration() {
             }
         }).then(res => res.json())
             .then(data => {
-                if (data.message == "success") {
-                    showNotificationHandler({
-                        title: "Pending...",
-                        message: "Sining up",
-                        stauts: "pending"
-                    })
-                }
+                setSuccess(true)
+                showNotificationHandler({
+                    title: "Success",
+                    message: "Success sining up",
+                    status: "success"
+                })
+            }).catch((error) => {
+                showNotificationHandler({
+                    title: "Error",
+                    message: error,
+                    status: "error"
+                })
             })
     }
 

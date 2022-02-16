@@ -2,9 +2,12 @@ import { MongoClient } from "mongodb"
 
 export async function connectMongoDB() {
     const mongoDbUrl = "mongodb+srv://admin:XQ9Jz01hALQXGdl2@cluster0.kh5dv.mongodb.net/newsletter?retryWrites=true&w=majority"
-
-    const client = await MongoClient.connect(mongoDbUrl)
-
+    let client;
+    try {
+        client = await MongoClient.connect(mongoDbUrl)
+    } catch (error) {
+        throw new Error("Failed to connect to mongodb.")
+    }
     return client
 }
 
