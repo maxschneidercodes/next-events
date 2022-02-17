@@ -1,7 +1,10 @@
-import { MongoClient } from "mongodb"
+import { MongoClient, ObjectId } from "mongodb"
 
-export async function connectMongoDB() {
-    const mongoDbUrl = "mongodb+srv://admin:XQ9Jz01hALQXGdl2@cluster0.kh5dv.mongodb.net/newsletter?retryWrites=true&w=majority"
+export async function connectMongoDB(db) {
+    const user = process.env.MONGODB_USER
+    const pw = process.env.MONGODB_PW
+    const mongoDbUrl = `mongodb+srv://${user}:${pw}@cluster0.kh5dv.mongodb.net/${db}?retryWrites=true&w=majority`
+
     let client;
     try {
         client = await MongoClient.connect(mongoDbUrl)
@@ -13,11 +16,34 @@ export async function connectMongoDB() {
 
 export async function insertDocument(client, collection, doc) {
     const db = client.db()
-    await db.collection(collection).insertOne(doc)
+    try {
+        await db.collection(collection).insertOne(doc)
+    } catch (error) {
+        throw new Error("Failed to insert into mongodb.")
+    }
 }
+
+export async function updateDocument(client, collection, comment, eventId) {
+    const db = client.db()
+    try {
+        await db.collection(collection).updateOne({ _id: ObjectId(eventId) }, {
+            $push: {
+                comments: comment
+            }
+        }, { upsert: true })
+    } catch (error) {
+        throw error
+    }
+}
+
 
 export async function getDocument(client, name) {
     const db = client.db()
-    const doc = await db.collection(name).find().toArray()
+    let doc
+    try {
+        doc = await db.collection(name).find().toArray()
+    } catch (error) {
+        throw new Error("Failed to getData from mongodb.")
+    }
     return doc
 }

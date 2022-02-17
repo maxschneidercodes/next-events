@@ -1,36 +1,26 @@
 import classes from './comment-list.module.css';
 
 export default function CommentList(props) {
-    const { eventId, comments } = props
+    const { comments } = props
 
     if (!comments) {
         return null
     }
-
-    const filteredComments = comments.filter(item => {
-        return item.id === eventId
-    })
-
-    if (!filteredComments) {
-        return null
-    }
-
-    let arr = []
-    for (let i = 0; i < filteredComments.length; i++) {
-        let html = <div key={filteredComments[i].id + i}>
+    console.log(comments)
+    const commentsHmtl = comments.map(comment => {
+        return <div key={comment.name} >
             <li>
-                <p>{filteredComments[i].text}</p>
+                <p>{comment.comment}</p>
                 <div>
-                    By <address>{filteredComments[i].name}</address>
+                    By <address>{comment.name} on {comment.date}</address>
                 </div>
             </li>
-        </div>
-        arr.push(html)
-    }
+        </div >
+    })
 
     return (
         <ul className={classes.comments}>
-            {arr}
+            {commentsHmtl}
         </ul>
     );
 }

@@ -5,24 +5,12 @@ import NewComment from './new-comment';
 import classes from './comments.module.css';
 import { useContext } from 'react';
 import { Context } from '../../store/notification-context';
-import { useEffect } from 'react';
 
 function Comments(props) {
-    const { eventId } = props;
+    const { eventId, comments } = props;
     const router = useRouter()
     const [showComments, setShowComments] = useState(false);
     const { showNotificationHandler } = useContext(Context)
-    const [comments, setComments] = useState([])
-    const [loadingCommentsBanner, setLoadingCommentsBanner] = useState(false)
-
-    useEffect(() => {
-        setLoadingCommentsBanner(true)
-        fetch("/api/comment").then(res => res.json())
-            .then(data => {
-                setLoadingCommentsBanner(false)
-                setComments(data.comments)
-            })
-    }, [])
 
     function toggleCommentsHandler() {
         setShowComments((prevStatus) => !prevStatus);
@@ -66,8 +54,7 @@ function Comments(props) {
                 {showComments ? 'Hide' : 'Show'} Comments
             </button>
             {showComments && <NewComment eventId={eventId} onAddComment={addCommentHandler} />}
-            {showComments && loadingCommentsBanner && "Loading comments.."}
-            {showComments && <CommentList eventId={eventId} comments={comments} />}
+            {showComments && <CommentList comments={comments} />}
         </section>
     );
 }

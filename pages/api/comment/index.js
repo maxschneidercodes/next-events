@@ -1,46 +1,27 @@
-import fs from "fs"
-import path from "path"
+import { addComment } from "../../../data/EventsData"
 
-export function buildCommentPath() {
-    return path.join(process.cwd(), "data", "commentData.json")
-}
 
-export function getCommentData(filePath) {
-    const fileData = fs.readFileSync(filePath)
-    return JSON.parse(fileData)
-}
+export default async function handler(req, res) {
 
-function handler(req, res) {
-    if (req.method === "GET") {
+    if (req.method === "POST") {
 
-        const filePath = buildCommentPath()
-        const data = getCommentData(filePath)
-        res.status(200).json({ message: "success", comments: data })
-
-    } else if (req.method === "POST") {
-
-        const eventId = req.body.eventId
-        const email = req.body.email
+        const commentText = req.body.text
+        const eventID = req.body.eventId
         const name = req.body.name
-        const feedbackText = req.body.text
+        const email = req.body.email
 
-        const comment = {
-            id: eventId,
-            email: email,
+        let comment = {
+            comment: commentText,
+            date: new Date().toISOString,
             name: name,
-            text: feedbackText
+            email: email
         }
-
-        const filePath = buildCommentPath()
-        const data = getCommentData(filePath)
-        data.push(comment)
-
-        fs.writeFileSync(filePath, JSON.stringify(data))
-
-        res.status(201).json({ message: "success", comment: comment })
-    } else {
-        res.status(200).json(false)
+        try {
+            addComment(comment, eventID)
+            res.status(201).json({ message: "success" })
+        } catch (error) {
+            res.status(500).json({ message: error })
+        }
     }
-}
 
-export default handler
+}

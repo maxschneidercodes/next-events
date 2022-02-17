@@ -17,9 +17,9 @@ export default function EventItem(props) {
 
     let exploreLink = ""
     if (item.isSlug) {
-        exploreLink = `${item.id}`
+        exploreLink = `${item._id}`
     } else {
-        exploreLink = `events/${item.id}`
+        exploreLink = `events/${item._id}`
     }
 
     return (

@@ -23,6 +23,7 @@ export default function EventsPage(props) {
 }
 
 export async function getStaticProps() {
+
     const events = await getAllEvents()
 
     if (!events) {
