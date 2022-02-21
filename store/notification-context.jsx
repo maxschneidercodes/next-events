@@ -4,6 +4,7 @@ const Context = React.createContext()
 
 function ContextProvider({ children }) {
 
+    const [succesNewsletter, setSuccesNewsletter] = useState(false)
     const [activeNotification, setActiveNotification] = useState()
 
     useEffect(() => {
@@ -31,7 +32,9 @@ function ContextProvider({ children }) {
     const contextProviderValues = {
         activeNotification,
         showNotificationHandler,
-        hideNotificationHandler
+        hideNotificationHandler,
+        succesNewsletter,
+        setSuccesNewsletter
     }
 
     return (

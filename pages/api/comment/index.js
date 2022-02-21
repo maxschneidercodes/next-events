@@ -5,8 +5,8 @@ export default async function handler(req, res) {
 
     if (req.method === "POST") {
 
-        const commentText = req.body.text
-        const eventID = req.body.eventId
+        const commentText = req.body.texts
+        const eventID = req.body.eventIdss
         const name = req.body.name
         const email = req.body.email
 
@@ -16,12 +16,12 @@ export default async function handler(req, res) {
             name: name,
             email: email
         }
+
         try {
             addComment(comment, eventID)
             res.status(201).json({ message: "success" })
         } catch (error) {
             res.status(500).json({ message: error })
         }
-    }
-
+    } 
 }

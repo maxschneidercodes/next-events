@@ -1,25 +1,40 @@
 import { MongoClient, ObjectId } from "mongodb"
 
-export async function connectMongoDB(db) {
-    const user = process.env.MONGODB_USER
-    const pw = process.env.MONGODB_PW
-    const mongoDbUrl = `mongodb+srv://${user}:${pw}@cluster0.kh5dv.mongodb.net/${db}?retryWrites=true&w=majority`
+const MONGODB_USER = process.env.MONGODB_USER;
+const MONGODB_PW = process.env.MONGODB_PW;
+const MONGODB_DB = process.env.MONGODB_DB;
 
-    let client;
-    try {
-        client = await MongoClient.connect(mongoDbUrl)
-    } catch (error) {
-        throw new Error("Failed to connect to mongodb.")
-    }
-    return client
+if (!MONGODB_USER || !MONGODB_PW || !MONGODB_DB) {
+    throw new Error(`Define the MONGODB_USER environmental variables`);
 }
+
+const mongoDbUrl = `mongodb+srv://${MONGODB_USER}:${MONGODB_PW}@cluster0.kh5dv.mongodb.net/${MONGODB_DB}?retryWrites=true&w=majority`
+
+export async function connectToDatabase() {
+    if (global.connection) return global.connection
+    if (!global.connectionPromise) {
+        global.connectionPromise = MongoClient.connect(mongoDbUrl, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        })
+    }
+
+    const client = await global.connectionPromise
+    const db = await client.db()
+    global.connection = {
+        client,
+        db,
+    }
+    return global.connection
+}
+
 
 export async function insertDocument(client, collection, doc) {
     const db = client.db()
     try {
         await db.collection(collection).insertOne(doc)
     } catch (error) {
-        throw new Error("Failed to insert into mongodb.")
+        throw error
     }
 }
 
@@ -35,7 +50,6 @@ export async function updateDocument(client, collection, comment, eventId) {
         throw error
     }
 }
-
 
 export async function getDocument(client, name) {
     const db = client.db()

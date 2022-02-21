@@ -5,11 +5,11 @@ import classes from './newsletter-registration.module.css';
 
 import { useContext } from "react"
 import { Context } from '../../store/notification-context';
+
 function NewsletterRegistration() {
 
-    const { showNotificationHandler } = useContext(Context)
+    const { showNotificationHandler, succesNewsletter, setSuccesNewsletter } = useContext(Context)
     const emailRef = useRef()
-    const [success, setSuccess] = useState(false)
 
     function registrationHandler(event) {
         event.preventDefault();
@@ -31,7 +31,7 @@ function NewsletterRegistration() {
             }
         }).then(res => res.json())
             .then(data => {
-                setSuccess(true)
+                setSuccesNewsletter(true)
                 showNotificationHandler({
                     title: "Success",
                     message: "Success sining up",
@@ -49,7 +49,7 @@ function NewsletterRegistration() {
     return (
         <div>
             {
-                success ? null : <section className={classes.newsletter}>
+                succesNewsletter ? null : <section className={classes.newsletter}>
                     <h2>Sign up to stay updated!</h2>
                     <form onSubmit={registrationHandler}>
                         <div className={classes.control}>

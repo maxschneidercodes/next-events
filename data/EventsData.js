@@ -1,10 +1,8 @@
-import { getDocument, connectMongoDB, updateDocument } from "./mongoDb"
-
-
+import { getDocument, connectToDatabase, updateDocument } from "./mongoDb"
 
 export async function getAllEvents() {
-    const db = await connectMongoDB("events") //EDIT CALL ONLY ONCE!!
-    const res = await getDocument(db, "events")
+    const { client } = await connectToDatabase("events")
+    const res = await getDocument(client, "events")
     const eventsJSON = JSON.stringify(res)
     const eventsArr = JSON.parse(eventsJSON)
     return eventsArr
@@ -36,10 +34,11 @@ export async function getEventById(id) {
 
 export async function getCommentsById(id) {
     const events = await getAllEvents()
-
     const event = events.find((event) => event._id === id)
+
     let comments = []
     if (!event.comments) { return [] }
+
     for (let i = 0; i < event.comments.length; i++) {
         const commentObjc = {
             name: event.comments[i].name,
@@ -52,6 +51,6 @@ export async function getCommentsById(id) {
 }
 
 export async function addComment(comment, eventId) {
-    const db = await connectMongoDB("events")
-    await updateDocument(db, "events", comment, eventId)
+    const { client } = await connectToDatabase("events")
+    await updateDocument(client, "events", comment, eventId)
 }

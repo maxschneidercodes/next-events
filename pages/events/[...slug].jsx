@@ -5,7 +5,6 @@ import EventList from "../../components/events/EventList"
 import ResultsTitle from "../../components/events/results-title"
 import CustomButton from "../../components/ui/button"
 import ErrorAlert from "../../components/ui/error-alert"
-import { eventsDataUrl } from "../../data/EventsData"
 
 export default function FilteredEventsPage() {
     const router = useRouter()
@@ -13,7 +12,7 @@ export default function FilteredEventsPage() {
     const [loadedEvents, setLoadedEvents] = useState()
 
     useEffect(() => {
-        fetch(eventsDataUrl)
+        fetch("/api/events/")
             .then(res => res.json())
             .then(data => {
                 setLoadedEvents(data)
@@ -39,7 +38,7 @@ export default function FilteredEventsPage() {
         </ div>
     }
 
-    let filteredEvents = loadedEvents.filter((event) => {
+    let filteredEvents = loadedEvents.events.filter((event) => {
         const eventDate = new Date(event.date);
         return eventDate.getFullYear() === numYear
             && eventDate.getMonth() === numMonth - 1;

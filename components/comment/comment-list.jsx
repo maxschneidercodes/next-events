@@ -12,7 +12,7 @@ export default function CommentList(props) {
             <li>
                 <p>{comment.comment}</p>
                 <div>
-                    By <address>{comment.name} on {comment.date}</address>
+                    By <address>{comment.name}</address>
                 </div>
             </li>
         </div >
