@@ -6,7 +6,7 @@ import classes from './comments.module.css';
 import { useContext } from 'react';
 import { Context } from '../../store/notification-context';
 
-function Comments(props) {
+export default function Comments(props) {
     const { eventId, comments } = props;
     const router = useRouter()
     const [showComments, setShowComments] = useState(false);
@@ -59,4 +59,3 @@ function Comments(props) {
     );
 }
 
-export default Comments;

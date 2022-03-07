@@ -43,7 +43,8 @@ export async function getCommentsById(id) {
         const commentObjc = {
             name: event.comments[i].name,
             comment: event.comments[i].comment,
-            email: event.comments[i].email
+            email: event.comments[i].email,
+            date: event.comments[i].date ? event.comments[i].date : ""
         }
         comments.push(commentObjc)
     }

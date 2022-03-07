@@ -5,14 +5,14 @@ export default async function handler(req, res) {
 
     if (req.method === "POST") {
 
-        const commentText = req.body.texts
-        const eventID = req.body.eventIdss
+        const commentText = req.body.text
+        const eventID = req.body.eventId
         const name = req.body.name
         const email = req.body.email
 
         let comment = {
             comment: commentText,
-            date: new Date().toISOString,
+            date: new Date().toDateString(),
             name: name,
             email: email
         }
@@ -23,5 +23,5 @@ export default async function handler(req, res) {
         } catch (error) {
             res.status(500).json({ message: error })
         }
-    } 
+    }
 }

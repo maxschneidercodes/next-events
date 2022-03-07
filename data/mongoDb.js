@@ -40,12 +40,15 @@ export async function insertDocument(client, collection, doc) {
 
 export async function updateDocument(client, collection, comment, eventId) {
     const db = client.db()
+
+    console.log(eventId);
+
     try {
         await db.collection(collection).updateOne({ _id: ObjectId(eventId) }, {
             $push: {
                 comments: comment
             }
-        }, { upsert: true })
+        })
     } catch (error) {
         throw error
     }
